@@ -3,9 +3,16 @@
 }
 
 .logo {
-    max-width: 50%;
+    max-width: 100%;
 }
 
 .logo_header {
     max-width: 60%;
 }
+
+
+.logo-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
