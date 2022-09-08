@@ -1,0 +1,28 @@
+.fundo {
+    background-color: #efefef;
+}
+
+.logo {
+    max-width: 100%;
+}
+
+.logo_header {
+    max-width: 60% !important;
+}
+
+.logo-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (max-width: 992px) {
+    .teste22 {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    .logo_header {
+        max-width: 300px !important;
+    }
+}
