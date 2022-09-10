@@ -9,7 +9,7 @@ const Postagem = mongoose.model('postagens')
 
 //definindo rotas
 router.get('/', (req, res) => res.render('admin/index')) // pagina principal adm
-router.get('/categorias', (req, res) => Categoria.find().sort({date: 'desc'}).lean().then((categorias) => res.render('admin/categorias', {categorias: categorias})).catch((e) => {
+router.get('/categorias', (req, res) => Categoria.find().lean().sort({date:'desc'}).then((categorias) => res.render('admin/categorias', {categorias: categorias})).catch((e) => {
         req.flash('error_msg', 'erro ao cadastrar categoria')
         res.redirect('/admin')
     })) // A função .find() vai listar todas as categorias de dentro do banco de dados.
@@ -78,8 +78,13 @@ router.post('/categorias/deletar', (req, res) => { // recebendo o id para deleta
         res.redirect('/admin/categorias')
     })
 })
-router.get('/postagens', (req, res) => {
-    res.render('admin/postagens')
+router.get('/postagens', (req, res) => { //vou renderizar a pagina de postagens
+    Postagem.find().lean().populate('categoria').sort({data: 'desc'}).then((postagens) => { //vou procurar as categorias para colocar junto com as postagens usando o .populate('categoria')
+        res.render('admin/postagens', {postagens: postagens})
+    }).catch((e) => {
+        req.flash('error_msg', 'erro ao listar as postagens')
+        res.redirect('/admin')
+    })
 }) // pagina de posts renderizando o adm/postagens
 router.get('/postagens/add', ((req, res) => {
     Categoria.find().lean().then((categorias) => { // procura as categoridas de dentro do banco de dados
@@ -115,9 +120,49 @@ if(req.body.categoria == '0') { // vou jogar para o var erros, o texto de erro
         })
     }
 })
+router.get('/postagens/edit/:id', (req, res) => { //
+    Postagem.findOne({_id: req.params.id}).lean().then((postagem) => { // pesquisando o id que veio do botão editar postagem
+        Categoria.find().lean().then((categorias) => { // pesquisando todas as categorias disponiveis
+            res.render('admin/editpostagens', {categorias: categorias, postagem: postagem}) // passando as categorias e a postagem do id
+        }).catch((e) => {
+            req.flash('error_mgs', 'erro ao pesquisar a categoria. Formulario nao carregado.')
+            res.redirect('/admin/postagens')
+        })
+    }).catch((e) => {
+        req.flash('error_mgs', 'erro ao pesquisar a postagem. Formulario nao carregado.')
+        res.redirect('/admin/postagens')
+    })
+})
+router.post('/postagem/edit', (req, res) => {
+    Postagem.findOne({_id: req.body.id}).then((postagem) => { // pesquisando o id que esta vindo do furmulario de edção
+        postagem.titulo = req.body.titulo
+        postagem.slug = req.body.slug
+        postagem.descricao = req.body.descricao
+        postagem.conteudo = req.body.conteudo
+        postagem.categoria = req.body.categoria
 
-
-
+        postagem.save().then(() => { 
+            req.flash('success_msg', 'Postagem salva com sucesso')
+            res.redirect('/admin/postagens')
+        }).catch(() => {
+            req.flash('error_msg', 'Erro ao salvar postagem')
+            res.redirect('/admin/postagens')
+        })
+    }).catch((e) => {
+        req.flash('error_msg', 'Erro ao salvar edição')
+        res.redirect('/admin/postagens')
+        console.log(e)
+    })
+})
+router.post('/postagem/deletar', (req, res) => { // recebendo o id para deletar no caminho /postagem/deletar
+    Postagem.deleteOne({_id: req.body.id}).then(() => { // deletando a postagem com o id informado.
+        req.flash('success_msg', 'Postagem deletada com sucesso')
+        res.redirect('/admin/postagens')
+    }).catch((e) => {
+        req.flash('error_msg', 'erro ao excluir postagem')
+        res.redirect('/admin/postagens')
+    })
+})
 
 
 module.exports = router

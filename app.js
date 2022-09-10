@@ -8,6 +8,10 @@ const path = require('path') // o path server para vocÊ poder trabalhar manipul
 const mongoose = require('mongoose')
 const session = require('express-session')
 const flash = require('connect-flash')
+require('./models/Postagem')
+const Postagem = mongoose.model('postagens')
+require('./models/Categoria')
+const Categoria = mongoose.model('categorias')
 
 //configurações
     // configurar sessão
@@ -36,9 +40,68 @@ const flash = require('connect-flash')
     app.use(express.static(path.join(__dirname,'public'))) // configurando a pasta public 
 
 //rotas
-app.use('/admin', admin)
+app.get('/', (req, res) => {
+    Postagem.find().lean().populate('categoria').sort({data: 'desc'}).then((postagens) => { // vai passar para a paginaprincipal, as postagens e as categorias
+        res.render('index', {postagens: postagens})
+    }).catch((e) => {
+        req.flash('error_msg', 'erro interno')
+        res.redirect('/404')
+    })
+})
+app.get('/404', (req, res) => res.send('erro 404!'))
 app.get('/post', (req, res) => res.send('pagina de posts'))
-app.get('/', (req, res) => res.send('pagina inicial'))
+app.use('/admin', admin)
+app.get('/postagem/:slug', (req, res) => { // pesquisar uma postagem especifica pelo slug recebido
+    Postagem.findOne({slug: req.params.slug}).lean().then((postagem) => { // se der certo e ele achar essa postagem, ele vai executar um IF
+        if(postagem){ // se ele achar uma postagem, ele vai renderizar a view base (dentro dessa view base, vai ser passada as informações do id da postagem especifica)
+            res.render('postagem/index', {postagem: postagem}) // passando o parametro de postagem para poder ser localizada os parametros da postagem dentro da pagina base
+        }else{
+            req.flash('error_msg', 'esta postagem não existe')
+            res.redirect('/')
+        }
+    }).catch((e) => {
+        req.flash('error_msg', 'Erro interno')
+        res.redirect('/')
+    })
+})
+app.get('/categorias', (req, res) => {
+    Categoria.find().lean().then((categorias) => {
+        res.render('categorias/index', {categorias: categorias}) 
+    }).catch((e) => {
+        req.flash('error_msg', 'erro ao listar categorias')
+        res.redirect('/')
+    })
+})
+app.get('/categorias/:slug', (req, res) => {
+    Categoria.findOne({slug: req.params.slug}).lean().then((categoria) => {
+        if(categoria) {
+            Postagem.find({categoria: categoria._id}).lean().then((postagens) => {
+                res.render('categorias/postagens', {postagens: postagens, categoria: categoria})
+            }).catch((e) => {
+                req.flash('error_msg', 'erro ao listar os posts')
+                res.redirect('/categorias')
+            })
+        }else{
+        req.flash('error_msg', 'essa categoria não existe')
+        res.redirect('/categorias')
+        }
+
+    }).catch((e) => {
+        console.log(e)
+        req.flash('error_msg', 'erro ao localizar categoria')
+        res.redirect('/categorias')
+    })
+})
+
+
+
+
+
+
+
+
+
+
 
 //outros
 const PORT = 80
@@ -46,3 +109,4 @@ app.listen(PORT, () => console.log('Servidor WEB OK'))
 
 // infs 
 // todo o app.use é a configuração de um middleware
+// /nome é referencia de link e nome/sem/barra é referencia de pasta 

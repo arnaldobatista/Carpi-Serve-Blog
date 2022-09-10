@@ -18,14 +18,6 @@ const Postagem = new Schema ({
         type: String,
         require: true
     },
-    titulo: {
-        type: String,
-        require: true
-    },
-    titulo: {
-        type: String,
-        require: true
-    },
     categoria: {
         type: Schema.Types.ObjectId, // esse campo ira armazenar o id de uma categoria.
         ref: 'categorias',
