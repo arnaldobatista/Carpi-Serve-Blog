@@ -25,14 +25,14 @@ jobs:
         with:
           username: carpi
           server: 132.255.95.56
-          port: 2222 # default is 15
+          port: 22 # default is 15
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
 
           
           # will put all file under this path
           local_path: ./* # default is ./*
           # files will copy to under remote_path
-          remote_path: /var/www/html
+          remote_path: /home/carpi/site
           
           # sftp args
           args: '-o ConnectTimeout=5'
