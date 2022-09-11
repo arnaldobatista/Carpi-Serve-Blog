@@ -12,6 +12,9 @@ require('./models/Postagem')
 const Postagem = mongoose.model('postagens')
 require('./models/Categoria')
 const Categoria = mongoose.model('categorias')
+const usuarios = require('./routes/Usuario')
+const passport = require('passport')
+require('./config/auth')(passport)
 
 //configurações
     // configurar sessão
@@ -20,11 +23,15 @@ const Categoria = mongoose.model('categorias')
         resave: true,
         saveUninitialized: true
     }))
+    app.use(passport.initialize())
+    app.use(passport.session())
     app.use(flash())
     //configurando middleware
     app.use((req, res, next) => {
         res.locals.success_msg = req.flash('success_msg') // o res.locals eu consigo fazer uma variavel e ter acesso a ela em qualquer local do meu codigo. ela é uma variavel global.
         res.locals.error_msg = req.flash('error_msg')
+        res.locals.error = req.flash('error')
+        res.locals.user = req.user || null
         next()
     })
     // body parser
@@ -48,9 +55,6 @@ app.get('/', (req, res) => {
         res.redirect('/404')
     })
 })
-app.get('/404', (req, res) => res.send('erro 404!'))
-app.get('/post', (req, res) => res.send('pagina de posts'))
-app.use('/admin', admin)
 app.get('/postagem/:slug', (req, res) => { // pesquisar uma postagem especifica pelo slug recebido
     Postagem.findOne({slug: req.params.slug}).lean().then((postagem) => { // se der certo e ele achar essa postagem, ele vai executar um IF
         if(postagem){ // se ele achar uma postagem, ele vai renderizar a view base (dentro dessa view base, vai ser passada as informações do id da postagem especifica)
@@ -92,7 +96,10 @@ app.get('/categorias/:slug', (req, res) => {
         res.redirect('/categorias')
     })
 })
-
+app.get('/404', (req, res) => res.send('erro 404!'))
+app.get('/post', (req, res) => res.send('pagina de posts'))
+app.use('/admin', admin)
+app.use('/usuarios', usuarios)
 
 
 

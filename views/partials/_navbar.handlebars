@@ -8,8 +8,13 @@
         <li><a href="#" class="nav-link px-2 link-dark">Artigos</a></li>.
         <li><a href="#" class="nav-link px-2 link-dark">Sobre o Autor</a></li>
     </ul>
+    {{#if user}}
+        <a href="/usuarios/logout"><button type="button" class="btn btn-dark">Sair</button></a>
+    {{else}}
     <div class="text-center">
-        <button type="button" class="btn btn-outline-dark">Login</button>
-        <button type="button" class="btn btn-dark">Criar Conta GRATIS</button>
+        <a href="/usuarios/login"><button type="button" class="btn btn-outline-dark">Login</button></a>
+        <a href="/usuarios/registro"><button type="button" class="btn btn-dark">Criar Conta GRATIS</button></a>
     </div>
+    {{/if}}
+
 </header>

@@ -6,15 +6,16 @@ require('../models/Categoria') // chamar o arquivo do model
 const Categoria = mongoose.model('categorias') // chamar uma função que vai receber o nome do seu model e passar para uma variavel.
 require('../models/Postagem')
 const Postagem = mongoose.model('postagens')
+const {eAdmin} = require('../helpers/eAdmin') // esse {eAdmin} eu estou dizendo que eu quero pegar somente a função eAdmin do arquivo
 
 //definindo rotas
-router.get('/', (req, res) => res.render('admin/index')) // pagina principal adm
-router.get('/categorias', (req, res) => Categoria.find().lean().sort({date:'desc'}).then((categorias) => res.render('admin/categorias', {categorias: categorias})).catch((e) => {
+router.get('/', eAdmin, (req, res) => res.render('admin/index')) // pagina principal adm
+router.get('/categorias', eAdmin, (req, res) => Categoria.find().lean().sort({date:'desc'}).then((categorias) => res.render('admin/categorias', {categorias: categorias})).catch((e) => {
         req.flash('error_msg', 'erro ao cadastrar categoria')
         res.redirect('/admin')
     })) // A função .find() vai listar todas as categorias de dentro do banco de dados.
-router.get('/categorias/add', (req, res) => res.render('admin/addcategorias')) // renderiza o admin/addcategorias -- cadastro de novas categorias
-router.post('/categorias/nova', (req, res) => {
+router.get('/categorias/add', eAdmin, (req, res) => res.render('admin/addcategorias')) // renderiza o admin/addcategorias -- cadastro de novas categorias
+router.post('/categorias/nova', eAdmin, (req, res) => {
     // validando dados passados da nova categoria  
     var erros = []
 
@@ -45,14 +46,14 @@ router.post('/categorias/nova', (req, res) => {
         })
     }
 })
-router.get('/categorias/edit/:id', (req, res) => {
+router.get('/categorias/edit/:id', eAdmin, (req, res) => {
     Categoria.findOne({_id: req.params.id}).lean().then((categoria) => res.render('admin/editcategorias', {categoria: categoria}) ).catch((e) => {
         req.flash('error_msg', 'Esta categoria não existe')
         res.redirect('/admin/categorias')
     })
 }) // renderiza a pagina admin/editcategorias -- edição de categorias com as informações da determinada categoria
 
-router.post('/categorias/edit', (req, res) => { // esse post recebe as informações alteradas do /categorias/edit.
+router.post('/categorias/edit', eAdmin, (req, res) => { // esse post recebe as informações alteradas do /categorias/edit.
     Categoria.findOne({_id: req.body.id}).then((categoria) => { // aqui ele procura o id da categoria no banco de dados
         categoria.nome = req.body.nome // atribuindo as novas informações
         categoria.slug = req.body.slug
@@ -69,7 +70,7 @@ router.post('/categorias/edit', (req, res) => { // esse post recebe as informaç
         res.redirect('/admin/categorias')
     })
 }) 
-router.post('/categorias/deletar', (req, res) => { // recebendo o id para deletar no caminho /categorias/deletar
+router.post('/categorias/deletar', eAdmin, (req, res) => { // recebendo o id para deletar no caminho /categorias/deletar
     Categoria.deleteOne({_id: req.body.id}).then(() => { // deletando a categoria com o id informado.
         req.flash('success_msg', 'Categoria deletada com sucesso')
         res.redirect('/admin/categorias')
@@ -78,7 +79,7 @@ router.post('/categorias/deletar', (req, res) => { // recebendo o id para deleta
         res.redirect('/admin/categorias')
     })
 })
-router.get('/postagens', (req, res) => { //vou renderizar a pagina de postagens
+router.get('/postagens', eAdmin, (req, res) => { //vou renderizar a pagina de postagens
     Postagem.find().lean().populate('categoria').sort({data: 'desc'}).then((postagens) => { //vou procurar as categorias para colocar junto com as postagens usando o .populate('categoria')
         res.render('admin/postagens', {postagens: postagens})
     }).catch((e) => {
@@ -86,7 +87,7 @@ router.get('/postagens', (req, res) => { //vou renderizar a pagina de postagens
         res.redirect('/admin')
     })
 }) // pagina de posts renderizando o adm/postagens
-router.get('/postagens/add', ((req, res) => {
+router.get('/postagens/add', eAdmin, ((req, res) => {
     Categoria.find().lean().then((categorias) => { // procura as categoridas de dentro do banco de dados
         res.render('admin/addpostagem', {categorias: categorias}) // renderizando o admin/addpostagem junto com as categorias
     }).catch(() => {
@@ -94,7 +95,7 @@ router.get('/postagens/add', ((req, res) => {
         res.redirect('/admin')
     })
 }))
-router.post('/postagens/nova', (req, res) => { // receber os dados de uma nova postagem
+router.post('/postagens/nova', eAdmin, (req, res) => { // receber os dados de uma nova postagem
 //validando a categoria
 var erros = []
 
@@ -120,7 +121,7 @@ if(req.body.categoria == '0') { // vou jogar para o var erros, o texto de erro
         })
     }
 })
-router.get('/postagens/edit/:id', (req, res) => { //
+router.get('/postagens/edit/:id', eAdmin, (req, res) => { //
     Postagem.findOne({_id: req.params.id}).lean().then((postagem) => { // pesquisando o id que veio do botão editar postagem
         Categoria.find().lean().then((categorias) => { // pesquisando todas as categorias disponiveis
             res.render('admin/editpostagens', {categorias: categorias, postagem: postagem}) // passando as categorias e a postagem do id
@@ -133,7 +134,7 @@ router.get('/postagens/edit/:id', (req, res) => { //
         res.redirect('/admin/postagens')
     })
 })
-router.post('/postagem/edit', (req, res) => {
+router.post('/postagem/edit', eAdmin, (req, res) => {
     Postagem.findOne({_id: req.body.id}).then((postagem) => { // pesquisando o id que esta vindo do furmulario de edção
         postagem.titulo = req.body.titulo
         postagem.slug = req.body.slug
@@ -154,7 +155,7 @@ router.post('/postagem/edit', (req, res) => {
         console.log(e)
     })
 })
-router.post('/postagem/deletar', (req, res) => { // recebendo o id para deletar no caminho /postagem/deletar
+router.post('/postagem/deletar', eAdmin, (req, res) => { // recebendo o id para deletar no caminho /postagem/deletar
     Postagem.deleteOne({_id: req.body.id}).then(() => { // deletando a postagem com o id informado.
         req.flash('success_msg', 'Postagem deletada com sucesso')
         res.redirect('/admin/postagens')
