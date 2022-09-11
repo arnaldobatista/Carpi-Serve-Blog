@@ -44,7 +44,7 @@ require('./config/auth')(passport)
     mongoose.Promise = global.Promise
     mongoose.connect('mongodb://localhost/blogapp').then(() => console.log('Conectado ao banco de dados')).catch((e) => console.log(`Erro ao se conectar ao banco de dados: ${e}`))
     // publics (arquivos estaticos como css, img e JS)
-    app.use(express.static(path.join(__dirname,'public'))) // configurando a pasta public 
+    app.use(express.static(path.join(__dirname,'public'))) // configurando a pasta public
 
 //rotas
 app.get('/', (req, res) => {
@@ -70,7 +70,7 @@ app.get('/postagem/:slug', (req, res) => { // pesquisar uma postagem especifica 
 })
 app.get('/categorias', (req, res) => {
     Categoria.find().lean().then((categorias) => {
-        res.render('categorias/index', {categorias: categorias}) 
+        res.render('categorias/index', {categorias: categorias})
     }).catch((e) => {
         req.flash('error_msg', 'erro ao listar categorias')
         res.redirect('/')
@@ -98,6 +98,7 @@ app.get('/categorias/:slug', (req, res) => {
 })
 app.get('/404', (req, res) => res.send('erro 404!'))
 app.get('/post', (req, res) => res.send('pagina de posts'))
+app.get('/admin', (req, res) => res.send('erro 404!'))
 app.use('/admin', admin)
 app.use('/usuarios', usuarios)
 
@@ -114,6 +115,6 @@ app.use('/usuarios', usuarios)
 const PORT = 80
 app.listen(PORT, () => console.log('Servidor WEB OK'))
 
-// infs 
+// infs
 // todo o app.use é a configuração de um middleware
-// /nome é referencia de link e nome/sem/barra é referencia de pasta 
+// /nome é referencia de link e nome/sem/barra é referencia de pasta
