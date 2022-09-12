@@ -1,0 +1,31 @@
+<section class="text-center">
+    <div class="p-5 bg-image"></div>
+    <div class="card mx-4 mx-md-5 shadow-5-strong" style="
+        margin-top: -100px;
+        ">
+        <div class="card-body py-5 px-md-5">
+            <div class="row d-flex justify-content-center">
+                <div class="col-lg-8">
+                    {{#each postagens}}
+                    <div class="card mt-4">
+                        <div class="card-body">
+                            <h4>{{titulo}}</h4>
+                            <p>Descrição: {{descricao}}</p>
+                            <div>
+                                <div class="d-flex justify-content-end mt-2">
+                                    <a href="/postagem/{{slug}}"><button class="btn btn-success">Leia Mais</button></a>
+                                </div>
+                            </div>
+                            <hr>
+                            <small>Categoria: {{categoria.nome}}</small><br>
+                            <small>Data da criação: {{data}}</small>
+                        </div>
+                    </div>
+                    {{else}}
+                    <p>Nenhuma postagem registrada</p>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
