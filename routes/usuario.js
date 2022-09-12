@@ -1,7 +1,7 @@
-const express = require('express') 
+const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
-require('../models/Usuario')
+require('/home/carpi/site/models/Usuario')
 const Usuario = mongoose.model('usuarios')
 const bcrypt = require('bcryptjs') // criptador de senhas 
 const passport = require('passport')

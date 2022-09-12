@@ -2,12 +2,12 @@ const express = require('express')  // chamando o express
 const router = express.Router() // é isso que usamos para criar rotas em arquivos separados.
 // usando um model externo
 const mongoose = require('mongoose') // chamar o mongoose
-require('../models/Categoria') // chamar o arquivo do model
+require('/home/carpi/site/models/Categoria') // chamar o arquivo do model
 const Categoria = mongoose.model('categorias') // chamar uma função que vai receber o nome do seu model e passar para uma variavel.
-require('../models/Postagem')
+require('/home/carpi/site/models/Postagem')
 const Postagem = mongoose.model('postagens')
-const { eAdmin } = require('../helpers/eAdmin') // esse {eAdmin} eu estou dizendo que eu quero pegar somente a função eAdmin do arquivo
-require('../models/Usuario')
+const { eAdmin } = require('/home/carpi/site/helpers/eAdmin') // esse {eAdmin} eu estou dizendo que eu quero pegar somente a função eAdmin do arquivo
+require('/home/carpi/site/models/Usuario')
 const Usuario = mongoose.model('usuarios')
 const bcrypt = require('bcryptjs') // criptador de senhas 
 const passport = require('passport')

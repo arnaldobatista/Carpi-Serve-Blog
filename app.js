@@ -3,19 +3,19 @@ const express = require('express') // express é responsavel pelo gerenciamento 
 const handlebars = require('express-handlebars') // express-handlebars é responsavel pela renderização das paginas web pegando informações do banco de dados.
 const bodyParser = require('body-parser')
 const app = express()
-const admin = require('/routes/admin') // puchar as rotas admin
+const admin = require('./home/carpi/site/routes/admin') // puchar as rotas admin
 const path = require('path') // o path server para vocÊ poder trabalhar manipulando diretorios de dentro do servidor
 const mongoose = require('mongoose')
 const session = require('express-session')
 const flash = require('connect-flash')
-require('/models/Postagem')
+require('./home/carpi/site/models/Postagem')
 const Postagem = mongoose.model('postagens')
-require('/models/Categoria')
+require('./home/carpi/site/models/Categoria')
 const Categoria = mongoose.model('categorias')
-const usuarios = require('/routes/Usuario')
+const usuarios = require('./home/carpi/site/routes/Usuario')
 const passport = require('passport')
-require('/config/auth')(passport)
-// FEITO
+require('./home/carpi/site/config/auth')(passport)
+
 //configurações
     // configurar sessão
     app.use(session({
