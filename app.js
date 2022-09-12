@@ -42,7 +42,7 @@ require('./config/auth')(passport)
     app.set('view engine', 'handlebars')
     // mongose
     mongoose.Promise = global.Promise
-    mongoose.connect('mongodb://localhost/blogapp').then(() => console.log('Conectado ao banco de dados')).catch((e) => console.log(`Erro ao se conectar ao banco de dados: ${e}`))
+    mongoose.connect('mongodb://127.0.0.1:27017/blogapp').then(() => console.log('Conectado ao banco de dados')).catch((e) => console.log(`Erro ao se conectar ao banco de dados: ${e}`))
     // publics (arquivos estaticos como css, img e JS)
     app.use(express.static(path.join(__dirname,'public'))) // configurando a pasta public
 
@@ -102,17 +102,8 @@ app.get('/admin', (req, res) => res.send('erro 404!'))
 app.use('/admin', admin)
 app.use('/usuarios', usuarios)
 
-
-
-
-
-
-
-
-
-
 //outros
-const PORT = 80
+const PORT = 80 || 443
 app.listen(PORT, () => console.log('Servidor WEB OK'))
 
 // infs

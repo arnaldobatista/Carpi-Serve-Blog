@@ -9,5 +9,24 @@
     "mongoose": "^6.5.4",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0"
-  }
+  },
+  "name": "carpi-serve-blog",
+  "version": "1.0.0",
+  "main": "app.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node /home/carpi/site/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arnaldocarpi/Carpi-Serve-Blog.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/arnaldocarpi/Carpi-Serve-Blog/issues"
+  },
+  "homepage": "https://github.com/arnaldocarpi/Carpi-Serve-Blog#readme",
+  "description": ""
 }
