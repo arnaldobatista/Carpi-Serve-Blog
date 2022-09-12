@@ -103,7 +103,7 @@ app.use('/admin', admin)
 app.use('/usuarios', usuarios)
 
 //outros
-const PORT = 80
+const PORT = 80 || 443
 app.listen(PORT, () => console.log('Servidor WEB OK'))
 
 // infs
