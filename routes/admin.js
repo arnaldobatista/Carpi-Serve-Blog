@@ -1,4 +1,4 @@
-const express = require('express') // chamando o express
+const express = require('express')  // chamando o express
 const router = express.Router() // é isso que usamos para criar rotas em arquivos separados.
 // usando um model externo
 const mongoose = require('mongoose') // chamar o mongoose
