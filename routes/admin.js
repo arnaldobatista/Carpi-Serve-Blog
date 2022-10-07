@@ -179,8 +179,8 @@ router.get('/usuarios', eAdmin, (req, res) => { //mostrar os usuarios
 })
 router.get('/usuarios/edit/:id', eAdmin, (req, res) => {
     Usuario.findOne({ _id: req.params.id }).lean().then((usuario) => res.render('admin/editusuarios', { usuario: usuario })).catch((e) => {
-        req.flash('error_msg', 'Esta categoria não existe')
-        res.redirect('/admin/categorias')
+        req.flash('error_msg', 'Este usuario não existe')
+        res.redirect('/admin/usuarios')
     })
 }) // renderiza a pagina admin/editcategorias -- edição de categorias com as informações da determinada categoria
 router.post('/usuarios/edit', eAdmin, (req, res) => { // esse post recebe as informações alteradas do /categorias/edit.
@@ -192,7 +192,7 @@ router.post('/usuarios/edit', eAdmin, (req, res) => { // esse post recebe as inf
         bcrypt.genSalt(10, (erro, salt) => {
             bcrypt.hash(usuario.senha, salt, (erro, hash) => {
                 if (erro) {
-                    req.flash('error_msg', 'erro ao salvar sua senha')
+                    req.flash('error_msg', 'erro ao editar sua senha')
                     res.redirect('/admin/usuarios')
                 }
                 usuario.senha = hash
